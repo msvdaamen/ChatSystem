@@ -18,17 +18,20 @@ const router =  new Router({
       path: '/',
       name: 'dashboard',
       component: dashboard,
-      beforeRouteEnter: (to, from, next) => {isLoggedIn(to, from, next)}
+      beforeEnter: (to, from, next) => {isLoggedIn(to, from, next)}
     },
     {
       path: '/login',
       name: 'login',
-      component: login
+      component: login,
+      beforeEnter: (to, from, next) => {
+        alreadyLoggedin(to, from, next)}
     },
     {
       path: '/register',
       name: 'register',
-      component: register
+      component: register,
+      beforeEnter: (to, from, next) => {alreadyLoggedin(to, from, next)}
     }
     ,
     {
@@ -66,11 +69,22 @@ const router =  new Router({
 })
 
 const isLoggedIn = function (to, from, next) {
-  if(store.state.user.token !== undefined) {
+  if(localStorage.getItem('token')) {
     next()
   }else {
-    next(false)
+    localStorage.removeItem('token')
+    store.commit('setUser', undefined)
     router.push({name: 'login'})
+    next(false);
+  }
+}
+
+const alreadyLoggedin = function (to, from, next) {
+  if(localStorage.getItem('token')) {
+    next(false)
+    router.push({name: 'dashboard'})
+  }else {
+    next();
   }
 }
 

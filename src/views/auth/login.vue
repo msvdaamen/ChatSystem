@@ -22,8 +22,6 @@
 <script>
   import router from '../../router/index'
   import { mapState, mapMutations } from 'vuex'
-  import mutations from '../../store/mutations'
-  import store from '../../store/store'
 
 
   export default {

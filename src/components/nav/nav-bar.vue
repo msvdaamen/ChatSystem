@@ -17,7 +17,7 @@
           <img id="userActions" data-toggle="dropdown" src="static/assets/images/questionmark.png" width="75" height="75" class="rounded img-thumbnail">
           <div class="dropdown-menu" aria-labelledby="userActions">
             <button v-on:click="profile(1)" class="dropdown-item">Profile</button>
-            <button class="dropdown-item">Logout</button>
+            <button v-on:click="logout()" class="dropdown-item">Logout</button>
           </div>
         </div>
 
@@ -31,7 +31,7 @@
   import router from '../../router/index'
 
     export default {
-        name: "nav-bar",
+      name: "nav-bar",
       methods: {
           search() {
             console.log('search')
@@ -41,6 +41,14 @@
           },
           home() {
             router.push({name: 'dashboard'})
+          },
+          logout() {
+              this.axios.post('/logout').then((response) => {
+                localStorage.removeItem('token')
+                router.push({name: 'login'})
+              }).catch((error) => {
+                console.log(error)
+              });
           }
       }
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
+    <nav-bar v-if="user.token"></nav-bar>
     <!--<friends></friends>-->
     <router-view/>
   </div>
@@ -9,10 +9,16 @@
 <script>
 import NavBar from "./components/nav/nav-bar";
 import Friends from "./components/friends";
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
-  components: {Friends, NavBar}
+  components: {Friends, NavBar},
+  computed: {
+    ...mapState({
+      user: state => state.user
+    })
+  }
 }
 </script>
 

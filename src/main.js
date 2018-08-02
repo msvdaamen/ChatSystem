@@ -28,14 +28,32 @@ new Vue({
   beforeCreate() {
     this.axios.defaults.baseURL = ' http://127.0.0.1:8000/api'
     this.axios.defaults.headers.accept = 'application/json';
+    this.axios.interceptors.request.use((config) => {
+      config.headers.Authorization = 'Bearer ' + localStorage.getItem('token');
+      return config;
+    });
+    this.axios.interceptors.response.use((response) => {
+      if(response.status === 401) {
+        localStorage.removeItem('token')
+        router.push({name: 'login'})
+      }
+      return response;
+    })
+
 
     if(localStorage.getItem('token')) {
-      this.axios.defaults.headers.Authorization = 'Bearer ' + localStorage.getItem('token');
       this.axios.get('/me').then((response) => {
+        localStorage.setItem('token', response.data.token);
         this.$store.commit('setUser', response.data);
+        if(router.currentRoute.name === 'login' || router.currentRoute.name === 'register') {
+          router.push({name: 'dashboard'})
+        }
       }).catch((error) => {
-        console.log(error)
+        localStorage.removeItem('token')
+        router.push({name: 'login'})
       });
+    }else {
+      router.push({name: 'login'})
     }
   },
 })
