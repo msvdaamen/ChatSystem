@@ -1,7 +1,13 @@
 <template>
-  <div>
-    <chat-list></chat-list>
-    <chat-chat></chat-chat>
+  <div class="container-fluid">
+    <div class="row mt-3">
+      <div class="col-2">
+        <chat-list></chat-list>
+      </div>
+      <div class="col-10">
+        <chat-chat></chat-chat>
+      </div>
+    </div>
   </div>
 </template>
 

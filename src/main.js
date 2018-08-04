@@ -6,13 +6,40 @@ import router from './router'
 import store from './store/store'
 import 'bootstrap'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCoffee, faPlus, faEllipsisV } from '@fortawesome/free-solid-svg-icons'
+import { faCoffee, faPlus, faEllipsisV, faBell, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import {Mutations} from './store/mutations'
+import VueEcho from 'vue-echo';
+import pusher from 'pusher-js'
+
+Vue.use(VueEcho, {
+  broadcaster: 'pusher',
+  key: '163eaa56d5f489eea5c6',
+  cluster:'eu',
+  authHost: 'http://localhost',
+  authEndpoint: 'http://localhost:8000/broadcasting/auth',
+  auth: {
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  }
+
+});
+
+ // const EchoInstance = new Echo({
+ //   authEndpoint : 'http:/localhost:8000/public/broadcasting/auth',
+ //   broadcaster: 'pusher',
+ //   key: '163eaa56d5f489eea5c6',
+ //   cluster:'eu'
+ //   });
+ // Vue.use(VueEcho, EchoInstance);
+
+
 Vue.use(VueAxios, axios)
 
-library.add(faCoffee, faPlus, faEllipsisV);
+library.add(faCoffee, faPlus, faEllipsisV, faBell, faCheck);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.config.productionTip = false;
@@ -37,14 +64,17 @@ new Vue({
         localStorage.removeItem('token')
         router.push({name: 'login'})
       }
+      if(response.status !== 200) {
+        console.log(response.statusText);
+      }
       return response;
-    })
+    });
 
 
     if(localStorage.getItem('token')) {
       this.axios.get('/me').then((response) => {
         localStorage.setItem('token', response.data.token);
-        this.$store.commit('setUser', response.data);
+        this.$store.commit(Mutations.SET_USER, response.data);
         if(router.currentRoute.name === 'login' || router.currentRoute.name === 'register') {
           router.push({name: 'dashboard'})
         }

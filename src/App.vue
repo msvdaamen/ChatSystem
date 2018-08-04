@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav-bar v-if="user.token"></nav-bar>
-    <!--<friends></friends>-->
+    <friends  v-if="user.token"></friends>
     <router-view/>
   </div>
 </template>

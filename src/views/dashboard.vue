@@ -1,13 +1,8 @@
 <template>
     <div class="container-fluid">
       <div class="row mt-5">
-        <card title="Chats" description="Some content"></card>
-        <card title="Tasks" description="Some content"></card>
-        <card title="Agenda" description="Some content"></card>
-
-        <card title="notes" description="Your notes"></card>
-
-        <card title="Chats" description="Shortcut to Mitchell"></card>
+          <card v-for="(dashboard,index) in dashboards" :key="dashboard.id" v-bind:title="dashboard.application.name" v-bind:arrayIndex="index" v-bind:id="dashboard.id" v-bind:description="dashboard.application.description" />
+        <!--<card title="Chats" description="Shortcut to Mitchell"></card>-->
 
       </div>
 
@@ -16,20 +11,38 @@
 
         </button>
         <div class="dropdown-menu">
-          <button class="btn">
+          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter">
             <font-awesome-icon icon="plus"/>
           </button>
         </div>
       </div>
+      <add-application/>
     </div>
 </template>
 
 <script>
     import Card from '../components/card'
+    import AddApplication from '../components/modal/add-application'
+    import {mapState} from 'vuex'
+    import {Actions} from '../store/actions'
+    import draggable from 'vuedraggable'
 
     export default {
       name: 'dashboard',
-      components: {Card}
+      components: {AddApplication, Card, draggable},
+      computed: {
+        ...mapState({
+          dashboards: 'dashboard'
+        })
+      },
+      data() {
+        return {
+
+        }
+      },
+      created() {
+       this.$store.dispatch(Actions.GET_DASHBOARD_ITEMS)
+      },
     }
 </script>
 

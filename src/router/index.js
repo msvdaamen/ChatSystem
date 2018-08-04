@@ -9,7 +9,7 @@ import tasks from '../views/tasks'
 import agenda from '../views/agenda'
 import notes from '../views/notes'
 import store from '../store/store'
-
+import {Mutations} from '../store/mutations'
 
 Vue.use(Router)
 const router =  new Router({
@@ -73,7 +73,7 @@ const isLoggedIn = function (to, from, next) {
     next()
   }else {
     localStorage.removeItem('token')
-    store.commit('setUser', undefined)
+    store.commit(Mutations.SET_USER, undefined)
     router.push({name: 'login'})
     next(false);
   }

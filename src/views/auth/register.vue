@@ -5,19 +5,19 @@
         <h1 style="margin-bottom: 5rem">Create an account</h1>
         <div class="form-group">
           <label for="exampleInputEmail1">Email address</label>
-          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
+          <input v-model="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email">
         </div>
         <div class="form-group">
           <label>Username</label>
-          <input type="text" class="form-control" placeholder="Username">
+          <input v-model="username" type="text" class="form-control" placeholder="Username">
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password">
+          <input v-model="password" type="password" class="form-control" id="password" placeholder="Password">
         </div>
         <div class="form-group">
           <label for="confirmPassword">Confirm password</label>
-          <input type="password" class="form-control" id="confirmPassword" placeholder="Password">
+          <input v-model="password_confirmation" type="password" class="form-control" id="confirmPassword" placeholder="Password">
         </div>
         <button v-on:click="register()"  class="btn btn-primary float-right">Register</button>
         <button v-on:click="login()" class="btn float-right mr-1">Login</button>
@@ -32,12 +32,33 @@
 
   export default {
       name: "register",
+      data() {
+        return {
+          email: '',
+          username: '',
+          password: '',
+          password_confirmation: ''
+        }
+      },
       methods: {
         login() {
           router.push({name: 'login'});
         },
         register() {
-          router.push({name: 'dashboard'});
+          const data = {
+            email: this.email,
+            name: this.username,
+            password: this.password,
+            password_confirmation: this.password_confirmation
+          }
+
+
+          this.axios.post('/register', data).then((response) => {
+            router.push({name: 'login'});
+          })
+            .catch((error) => {
+              console.log(error)
+            })
         }
       }
     }
